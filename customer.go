@@ -1,31 +1,18 @@
 package mp
 
 import (
+	"fmt"
 	"time"
-	"github.com/davecgh/go-spew/spew"
 )
 
 const (
-	// (GET) Looks for customers by many criteria.
-	SearchCustomerUrl = "/v1/customers/search"
-
-	// (POST) Makes a new customer.
-	newCustomerPath = "/v1/customers/"
-
-	// (GET) Retrieves information about a customer.
-	GetCustomerUrl = "/v1/customers/:id"
-
-	// (PUT) Updates a customer.
-	SaveCustomerUrl = "/v1/customers/:id"
-
-	// (DELETE) Removes a customer.
-	RemoveCustomerUrl = "/v1/customers/:id"
-
-	// (GET) Retrieves all cards from a customer.
-	GetCustomerCardsUrl = "/v1/customers/:id/cards"
-
-	// (POST) Saves a new card to the customer.
-	NewCustomerCardUrl = "/v1/customers/:id/cards"
+	getCustomerUrl        = "/v1/customers/"
+	searchCustomerUrl     = "/v1/customers/search/"
+	createCustomerPath    = "/v1/customers/"
+	saveCustomerUrl       = "/v1/customers/"
+	removeCustomerUrl     = "/v1/customers/"
+	getCustomerCardsUrl   = "/v1/customers/%s/cards"
+	createCustomerCardUrl = "/v1/customers/%s/cards"
 
 	// (GET) Retrieves information about a customer's card.
 	GetCustomerCardUrl = "/v1/customers/:id/cards/:card_id"
@@ -37,32 +24,57 @@ const (
 	RemoveCustomerCardUrl = "/v1/customers/:id/cards/:card_id"
 )
 
-func (c *Client) NewCustomer(customer *Customer) error {
+// Retrieves information about a customer.
+func (c *Client) GetCustomer(customer *Customer) error {
+	return c.Get(getCustomerUrl+customer.CustomerId, nil, nil, customer)
+}
 
-	// create new customer
-	err := c.Post(newCustomerPath, nil, nil, customer)
+// Looks for customers by many criteria.
+func (c *Client) SearchCustomer(customer *Customer) error {
+	return c.Get(searchCustomerUrl, customer, nil, customer)
+}
 
-	spew.Dump(err, customer)
+// Creates a new customer.
+func (c *Client) CreateCustomer(customer *Customer) error {
+	return c.Post(createCustomerPath, customer, nil, customer)
+}
 
-	return err
+// Updates customer information.
+func (c *Client) SaveCustomer(customer *Customer) error {
+	return c.Put(saveCustomerUrl+customer.CustomerId, customer, nil, customer)
+}
+
+// Removes a customer.
+func (c *Client) RemoveCustomer(customer *Customer) error {
+	return c.Delete(removeCustomerUrl+customer.CustomerId, nil, nil, customer)
+}
+
+// Retrieves all cards from a customer.
+func (c *Client) GetCustomerCards(customer *Customer) error {
+	return c.Get(fmt.Sprintf(getCustomerCardsUrl, customer.CustomerId), nil, nil, customer)
+}
+
+// Saves a new card to the customer.
+func (c *Client) NewCustomerCard(customer *Customer) error {
+	return c.Post(fmt.Sprintf(createCustomerCardUrl, customer.CustomerId), customer, nil, customer)
 }
 
 type Customer struct {
 	CustomerId      string          `json:"id"`
-	Email           string          `json:"email"`
-	FirstName       string          `json:"first_name"`
-	LastName        string          `json:"last_name"`
+	Email           string          `json:"email,omitempty"`
+	FirstName       string          `json:"first_name,omitempty"`
+	LastName        string          `json:"last_name,omitempty"`
 	Phone           *Phone          `json:"phone"`
 	Identification  *Identification `json:"identification"`
 	DefaultAddress  string          `json:"default_address"`
 	Address         *MainAddress    `json:"address"`
 	Description     string          `json:"description"`
-	DateRegistered  time.Time       `json:"date_registered"`
-	DateCreated     time.Time       `json:"date_created"`
-	DateLastUpdated time.Time       `json:"date_last_updated"`
+	DateRegistered  *time.Time      `json:"date_registered"`
+	DateCreated     *time.Time      `json:"date_created"`
+	DateLastUpdated *time.Time      `json:"date_last_updated"`
 	Metadata        interface{}     `json:"metadata"`
-	DefaultCard     string          `json:"default_card"`
-	Cards           []Card          `json:"cards"`
+	DefaultCard     string          `json:"default_card,omitempty"`
+	Cards           *Card           `json:"cards"`
 	Addresses       []Address       `json:"addresses"`
 	LiveMode        bool            `json:"live_mode"`
 }
@@ -83,44 +95,6 @@ type MainAddress struct {
 type Phone struct {
 	AreaCode string `json:"area_code"`
 	Number   string `json:"number"`
-}
-
-type Card struct {
-	CardId          string         `json:"id"`
-	CustomerId      string         `json:"customer_id"`
-	ExpirationMonth int            `json:"expiration_month"`
-	ExpirationYear  int            `json:"expiration_year"`
-	FirstSixDigits  string         `json:"first_six_digits"`
-	LastFourDigits  string         `json:"last_four_digits"`
-	PaymentMethod   *PaymentMethod `json:"payment_method"`
-	SecurityCode    *SecurityCode  `json:"security_code"`
-	Issuer          *Issuer        `json:"issuer"`
-	CardHolder      *CardHolder    `json:"card_holder"`
-	DateCreated     time.Time      `json:"date_created"`
-	DateLastUpdated time.Time      `json:"date_last_updated"`
-}
-
-type PaymentMethod struct {
-	PaymentId       string `json:"id"`
-	Name            string `json:"name"`
-	PaymentTypeId   string `json:"payment_type_id"`
-	Thumbnail       string `json:"thumbnail"`
-	SecureThumbnail string `json:"secure_thumbnail"`
-}
-
-type SecurityCode struct {
-	Length       int    `json:"length"`
-	CardLocation string `json:"card_location"`
-}
-
-type Issuer struct {
-	IssuerId string `json:"id"`
-	Name     string `json:"name"`
-}
-
-type CardHolder struct {
-	Name           string          `json:"name"`
-	Identification *Identification `json:"identification"`
 }
 
 type Address struct {
@@ -172,12 +146,6 @@ type Verifications struct {
 }
 
 type Shipment struct {
-	Success bool     `json:"success"`
-	Errors  []Error  `json:"errors"`
-}
-
-type Error struct {
-	Code        string `json:"code"`
-	Description string `json:"description"`
-	Field       string `json:"field"`
+	Success bool    `json:"success"`
+	Errors  []Cause `json:"errors"`
 }

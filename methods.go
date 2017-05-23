@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"github.com/davecgh/go-spew/spew"
 )
 
 const baseUrl = "https://api.mercadopago.com"
@@ -17,13 +18,13 @@ type Params map[string]interface{}
 type Headers map[string]string
 
 // Make request and return the response
-func (c *Client) execute(method string, endpoint string, params Params, headers Headers, model interface{}) error {
+func (c *Client) execute(method string, path string, params interface{}, headers Headers, model interface{}) error {
 
 	// init vars
 	var (
 		err error
 		data []byte
-		url = baseUrl + endpoint
+		url = baseUrl + path
 	)
 
 	// validate method type
@@ -50,7 +51,7 @@ func (c *Client) execute(method string, endpoint string, params Params, headers 
 	payload = strings.NewReader(string(data))
 
 	// append access_token
-	if endpoint != oauthTokenPath {
+	if path != oauthTokenPath {
 		url += "?access_token=" + c.AuthToken.AccessToken
 	}
 
@@ -77,6 +78,8 @@ func (c *Client) execute(method string, endpoint string, params Params, headers 
 		return err
 	}
 
+	spew.Dump(string(data))
+
 	// init MP custom error
 	em := &ErrorMessage{}
 
@@ -95,22 +98,22 @@ func (c *Client) execute(method string, endpoint string, params Params, headers 
 
 }
 
-//// Execute GET requests
-//func (c *Client) Get(endpoint string, params Params, headers Headers, data interface{}) error {
-//	return c.execute("GET", endpoint, params, headers, data)
-//}
-
-// Execute POST requests
-func (c *Client) Post(endpoint string, params Params, headers Headers, model interface{}) error {
-	return c.execute("POST", endpoint, params, headers, model)
+// Execute GET requests
+func (c *Client) Get(path string, params interface{}, headers Headers, model interface{}) error {
+	return c.execute("GET", path, params, headers, model)
 }
 
-//// Execute PUT requests
-//func (c *Client) Put(endpoint string, params Params, headers Headers, data interface{}) error {
-//	return c.execute("PUT", endpoint, params, headers, data)
-//}
-//
-//// Execute DELETE requests
-//func (c *Client) Delete(endpoint string, params Params, headers Headers, data interface{}) error {
-//	return c.execute("DELETE", endpoint, params, headers, data)
-//}
+// Execute POST requests
+func (c *Client) Post(path string, params interface{}, headers Headers, model interface{}) error {
+	return c.execute("POST", path, params, headers, model)
+}
+
+// Execute PUT requests
+func (c *Client) Put(path string, params interface{}, headers Headers, model interface{}) error {
+	return c.execute("PUT", path, params, headers, model)
+}
+
+// Execute DELETE requests
+func (c *Client) Delete(path string, params interface{}, headers Headers, model interface{}) error {
+	return c.execute("DELETE", path, params, headers, model)
+}

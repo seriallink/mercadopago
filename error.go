@@ -33,4 +33,5 @@ type ErrorMessage struct {
 type Cause struct {
 	Code        string `json:"code"`
 	Description string `json:"description"`
+	Field       string `json:"field"`
 }
