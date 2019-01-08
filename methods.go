@@ -3,10 +3,10 @@ package mp
 import (
 	"encoding/json"
 	"errors"
+	"github.com/davecgh/go-spew/spew"
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"github.com/davecgh/go-spew/spew"
 )
 
 const baseUrl = "https://api.mercadopago.com"
@@ -22,9 +22,9 @@ func (c *Client) execute(method string, path string, params interface{}, headers
 
 	// init vars
 	var (
-		err error
+		err  error
 		data []byte
-		url = baseUrl + path
+		url  = baseUrl + path
 	)
 
 	// validate method type
@@ -83,18 +83,18 @@ func (c *Client) execute(method string, path string, params interface{}, headers
 	// init MP custom error
 	em := &ErrorMessage{}
 
-	// check for error
-	if err = json.Unmarshal(data,em); err != nil {
-		return err
-	}
-
-	// found error
-	if em.GetMessage() != "" {
-		return errors.New(em.GetMessage())
+	// check for error message
+	if err = json.Unmarshal(data, em); err == nil {
+		if em.GetMessage() != "" {
+			if em.HasCauses() {
+				return errors.New(em.Causes[0].Description)
+			}
+			return errors.New(em.GetMessage())
+		}
 	}
 
 	// parse data
-	return json.Unmarshal(data,model)
+	return json.Unmarshal(data, model)
 
 }
 

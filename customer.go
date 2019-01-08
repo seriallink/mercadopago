@@ -60,29 +60,23 @@ func (c *Client) NewCustomerCard(customer *Customer) error {
 }
 
 type Customer struct {
-	CustomerId      string          `json:"id"`
+	CustomerId      string          `json:"id,omitempty"`
 	Email           string          `json:"email,omitempty"`
 	FirstName       string          `json:"first_name,omitempty"`
 	LastName        string          `json:"last_name,omitempty"`
 	Phone           *Phone          `json:"phone"`
 	Identification  *Identification `json:"identification"`
-	DefaultAddress  string          `json:"default_address"`
+	DefaultAddress  string          `json:"default_address,omitempty"`
 	Address         *MainAddress    `json:"address"`
-	Description     string          `json:"description"`
+	Description     string          `json:"description,omitempty"`
 	DateRegistered  *time.Time      `json:"date_registered"`
 	DateCreated     *time.Time      `json:"date_created"`
 	DateLastUpdated *time.Time      `json:"date_last_updated"`
 	Metadata        interface{}     `json:"metadata"`
 	DefaultCard     string          `json:"default_card,omitempty"`
-	Cards           *Card           `json:"cards"`
+	Cards           []Card          `json:"cards"`
 	Addresses       []Address       `json:"addresses"`
 	LiveMode        bool            `json:"live_mode"`
-}
-
-type Identification struct {
-	Type    string `json:"type"`
-	Number  string `json:"number"`
-	Subtype string `json:"subtype"`
 }
 
 type MainAddress struct {

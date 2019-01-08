@@ -5,6 +5,7 @@ const oauthTokenPath = "/oauth/token"
 type Client struct {
 	ClientId     string
 	ClientSecret string
+	PublicKey    string
 	Sandbox      bool
 	AuthToken    AuthToken
 }
@@ -19,12 +20,13 @@ type AuthToken struct {
 	Scope        string `json:"scope"`
 }
 
-func NewClient(id, secret, token string, sandbox bool) (*Client) {
+func NewClient(id, secret, key, token string, sandbox bool) *Client {
 
 	return &Client{
-		ClientId: id,
+		ClientId:     id,
 		ClientSecret: secret,
-		Sandbox: sandbox,
+		PublicKey:    key,
+		Sandbox:      sandbox,
 		AuthToken: AuthToken{
 			AccessToken: token,
 		},
@@ -34,7 +36,7 @@ func NewClient(id, secret, token string, sandbox bool) (*Client) {
 
 func (c *Client) Authorize() error {
 
-	data := Params {
+	data := Params{
 		"grant_type":    "client_credentials",
 		"client_id":     c.ClientId,
 		"client_secret": c.ClientSecret,

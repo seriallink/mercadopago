@@ -1,9 +1,11 @@
 package mp
 
+import "encoding/json"
+
 type ErrorImpl interface {
 	GetMessage() string
 	GetError() string
-	GetStatus() int
+	GetStatus() int64
 	HasCauses() bool
 }
 
@@ -15,8 +17,9 @@ func (em ErrorMessage) GetError() string {
 	return em.Error
 }
 
-func (em ErrorMessage) GetStatus() int {
-	return em.Status
+func (em ErrorMessage) GetStatus() int64 {
+	status, _ := em.Status.Int64()
+	return status
 }
 
 func (em ErrorMessage) HasCauses() bool {
@@ -24,10 +27,10 @@ func (em ErrorMessage) HasCauses() bool {
 }
 
 type ErrorMessage struct {
-	Message string  `json:"message"`
-	Error   string  `json:"error"`
-	Status  int     `json:"status"`
-	Causes  []Cause `json:"cause"`
+	Message string      `json:"message"`
+	Error   string      `json:"error"`
+	Status  json.Number `json:"status"`
+	Causes  []Cause     `json:"cause"`
 }
 
 type Cause struct {
