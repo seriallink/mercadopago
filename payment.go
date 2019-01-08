@@ -3,8 +3,6 @@ package mp
 import (
 	"encoding/json"
 	"fmt"
-	"time"
-
 	"github.com/jmoiron/sqlx/types"
 )
 
@@ -89,16 +87,17 @@ const (
 
 type Payment struct {
 	Id                        int64               `json:"id,omitempty"`
-	DateCreated               time.Time           `json:"date_created,omitempty"`
-	DateApproved              time.Time           `json:"date_approved,omitempty"`
-	DateLastUpdated           time.Time           `json:"date_last_updated,omitempty"`
-	MoneyReleaseDate          time.Time           `json:"money_release_date,omitempty"`
+	DateCreated               *Iso8601            `json:"date_created,omitempty"`
+	DateApproved              *Iso8601            `json:"date_approved,omitempty"`
+	DateOfExpiration          *Iso8601            `json:"date_of_expiration,omitempty"`
+	DateLastUpdated           *Iso8601            `json:"date_last_updated,omitempty"`
+	MoneyReleaseDate          *Iso8601            `json:"money_release_date,omitempty"`
 	CollectorId               int64               `json:"collector_id,omitempty"`
 	OperationType             string              `json:"operation_type,omitempty"`
-	Payer                     *Payer              `json:"payer"`
+	Payer                     *Payer              `json:"payer,omitempty"`
 	BinaryMode                bool                `json:"binary_mode,omitempty"`
 	LiveMode                  bool                `json:"live_mode,omitempty"`
-	Order                     *Order              `json:"order"`
+	Order                     *Order              `json:"order,omitempty"`
 	ExternalReference         string              `json:"external_reference,omitempty"`
 	Description               string              `json:"description,omitempty"`
 	Metadata                  types.JSONText      `json:"metadata"`
@@ -109,10 +108,10 @@ type Payment struct {
 	CampaignId                int64               `json:"campaign_id,omitempty"`
 	CouponCode                string              `json:"coupon_code,omitempty"`
 	TransactionDetails        *TransactionDetails `json:"transaction_details"`
-	FeeDetails                []Fee               `json:"fee_details"`
+	FeeDetails                []Fee               `json:"fee_details,omitempty"`
 	DifferentialPricingId     int64               `json:"differential_pricing_id,omitempty"`
 	ApplicationFee            float64             `json:"application_fee,omitempty"`
-	Status                    string              `json:"status,omitempty"`
+	Status                    json.Number         `json:"status,omitempty"`
 	StatusDetail              string              `json:"status_detail,omitempty"`
 	Capture                   bool                `json:"capture,omitempty"`
 	CallForAuthorizeId        string              `json:"call_for_authorize_id,omitempty"`
@@ -120,12 +119,12 @@ type Payment struct {
 	IssuerId                  string              `json:"issuer_id,omitempty"`
 	PaymentTypeId             string              `json:"payment_type_id,omitempty"`
 	Token                     string              `json:"token,omitempty"`
-	Card                      *Card               `json:"card"`
+	Card                      *Card               `json:"card,omitempty"`
 	StatementDescriptor       string              `json:"statement_descriptor,omitempty"`
 	Installments              int64               `json:"installments,omitempty"`
 	NotificationUrl           string              `json:"notification_url,omitempty"`
 	CallbackUrl               string              `json:"callback_url,omitempty"`
-	Refunds                   []Refund            `json:"refunds"`
+	Refunds                   []Refund            `json:"refunds,omitempty"`
 	AdditionalInfo            *AdditionalInfo     `json:"additional_info"`
 }
 
@@ -137,7 +136,18 @@ type Payer struct {
 	EntityType     string          `json:"entity_type,omitempty"`
 	Type           string          `json:"type,omitempty"`
 	Identification *Identification `json:"identification"`
-	Phone          *Phone          `json:"phone"`
+	Address        *Address        `json:"address,omitempty"`
+	Phone          *Phone          `json:"phone,omitempty"`
+}
+
+type Address struct {
+	StreetName   string `json:"street_name,omitempty"`
+	StreetNumber string `json:"street_number,omitempty"`
+	Neighborhood string `json:"neighborhood,omitempty"`
+	City         string `json:"city,omitempty"`
+	State        string `json:"federal_unit,omitempty"`
+	ZipCode      string `json:"zip_code,omitempty"`
+	Country      string `json:"country,omitempty"`
 }
 
 type Order struct {
@@ -166,8 +176,8 @@ type Refund struct {
 	PaymentId            int64          `json:"payment_id,omitempty"`
 	Amount               float64        `json:"amount,omitempty"`
 	Metadata             types.JSONText `json:"metadata,omitempty"`
-	Source               *Source        `json:"source"`
-	DateCreated          time.Time      `json:"date_created,omitempty"`
+	Source               *Source        `json:"source,omitempty"`
+	DateCreated          *Iso8601       `json:"date_created,omitempty"`
 	UniqueSequenceNumber string         `json:"unique_sequence_number,omitempty"`
 }
 
@@ -180,10 +190,10 @@ type Source struct {
 // Data that could improve fraud analysis and conversion rates. Try to send as much information as possible.
 type AdditionalInfo struct {
 	IpAddress string     `json:"ip_address,omitempty"`
-	Items     []Item     `json:"items"`
-	Buyer     *Buyer     `json:"payer"`
-	Shipments *Shipments `json:"shipments"`
-	Barcode   *Barcode   `json:"barcode"`
+	Items     []Item     `json:"items,omitempty"`
+	Buyer     *Buyer     `json:"payer,omitempty"`
+	Shipments *Shipments `json:"shipments,omitempty"`
+	Barcode   *Barcode   `json:"barcode,omitempty"`
 }
 
 type Item struct {
@@ -197,15 +207,15 @@ type Item struct {
 }
 
 type Buyer struct {
-	FirstName        string    `json:"first_name,omitempty"`
-	LastName         string    `json:"last_name,omitempty"`
-	Phone            *Phone    `json:"phone"`
-	Address          *Address  `json:"address"`
-	RegistrationDate time.Time `json:"registration_date,omitempty"`
+	FirstName        string   `json:"first_name,omitempty"`
+	LastName         string   `json:"last_name,omitempty"`
+	Phone            *Phone   `json:"phone,omitempty"`
+	Address          *Address `json:"address,omitempty"`
+	RegistrationDate *Iso8601 `json:"registration_date,omitempty"`
 }
 
 type Shipments struct {
-	ReceiverAddress *ReceiverAddress `json:"receiver_address"`
+	ReceiverAddress *ReceiverAddress `json:"receiver_address,omitempty"`
 }
 
 type ReceiverAddress struct {

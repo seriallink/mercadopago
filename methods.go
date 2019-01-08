@@ -3,7 +3,6 @@ package mp
 import (
 	"encoding/json"
 	"errors"
-	"github.com/davecgh/go-spew/spew"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -77,8 +76,6 @@ func (c *Client) execute(method string, path string, params interface{}, headers
 	if data, err = ioutil.ReadAll(response.Body); err != nil {
 		return err
 	}
-
-	spew.Dump(string(data))
 
 	// init MP custom error
 	em := &ErrorMessage{}

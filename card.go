@@ -1,19 +1,12 @@
 package mp
 
-import (
-	"github.com/davecgh/go-spew/spew"
-	"time"
-)
-
 const (
 	cardTokenUrl = "/v1/card_tokens/"
 )
 
 // Creates a new card token.
 func (c *Client) CreateCardToken(cardtoken *CardToken) error {
-	err := c.Post(cardTokenUrl, cardtoken, nil, cardtoken)
-	spew.Dump(err, cardtoken)
-	return err
+	return c.Post(cardTokenUrl, cardtoken, nil, cardtoken)
 }
 
 // Retrieves information about a card token.
@@ -34,50 +27,50 @@ type CardToken struct {
 	FirstSixDigits     string      `json:"firstSixDigits,omitempty"`
 	LastFourDigits     string      `json:"lastFourDigits,omitempty"`
 	Status             string      `json:"status,omitempty"`
-	CardNumberLength   int         `json:"cardNumberLength"`
-	SecurityCodeLength int         `json:"securityCodeLength"`
-	ExpirationYear     int         `json:"expirationYear"`
-	ExpirationMonth    int         `json:"expirationMonth"`
-	CardHolder         *CardHolder `json:"cardholder"`
-	DateDue            *time.Time  `json:"dateDue"`
-	DateUsed           *time.Time  `json:"dateUsed"`
-	DateCreated        *time.Time  `json:"dateCreated"`
-	DateLastUpdated    *time.Time  `json:"dateLastUpdated"`
-	LiveMode           bool        `json:"liveMode"`
+	CardNumberLength   int         `json:"cardNumberLength,omitempty"`
+	SecurityCodeLength int         `json:"securityCodeLength,omitempty"`
+	ExpirationYear     int         `json:"expirationYear,omitempty"`
+	ExpirationMonth    int         `json:"expirationMonth,omitempty"`
+	CardHolder         *CardHolder `json:"cardholder,omitempty"`
+	DateDue            *Iso8601    `json:"dateDue,omitempty"`
+	DateUsed           *Iso8601    `json:"dateUsed,omitempty"`
+	DateCreated        *Iso8601    `json:"dateCreated,omitempty"`
+	DateLastUpdated    *Iso8601    `json:"dateLastUpdated,omitempty"`
+	LiveMode           bool        `json:"liveMode,omitempty"`
 }
 
 type Card struct {
-	CardId          string         `json:"id"`
-	CustomerId      string         `json:"customer_id"`
-	ExpirationMonth int            `json:"expiration_month"`
-	ExpirationYear  int            `json:"expiration_year"`
-	FirstSixDigits  string         `json:"first_six_digits"`
-	LastFourDigits  string         `json:"last_four_digits"`
-	PaymentMethod   *PaymentMethod `json:"payment_method"`
-	SecurityCode    *SecurityCode  `json:"security_code"`
-	Issuer          *Issuer        `json:"issuer"`
-	CardHolder      *CardHolder    `json:"card_holder"`
-	DateCreated     time.Time      `json:"date_created"`
-	DateLastUpdated time.Time      `json:"date_last_updated"`
+	CardId          string         `json:"id,omitempty"`
+	CustomerId      string         `json:"customer_id,omitempty"`
+	ExpirationMonth int            `json:"expiration_month,omitempty"`
+	ExpirationYear  int            `json:"expiration_year,omitempty"`
+	FirstSixDigits  string         `json:"first_six_digits,omitempty"`
+	LastFourDigits  string         `json:"last_four_digits,omitempty"`
+	PaymentMethod   *PaymentMethod `json:"payment_method,omitempty"`
+	SecurityCode    *SecurityCode  `json:"security_code,omitempty"`
+	Issuer          *Issuer        `json:"issuer,omitempty"`
+	CardHolder      *CardHolder    `json:"card_holder,omitempty"`
+	DateCreated     *Iso8601       `json:"date_created,omitempty"`
+	DateLastUpdated *Iso8601       `json:"date_last_updated,omitempty"`
 }
 
 type SecurityCode struct {
-	Mode         string `json:"mode"`
-	Length       int    `json:"length"`
-	CardLocation string `json:"card_location"`
+	Mode         string `json:"mode,omitempty"`
+	Length       int    `json:"length,omitempty"`
+	CardLocation string `json:"card_location,omitempty"`
 }
 
 type Issuer struct {
-	IssuerId string `json:"id"`
-	Name     string `json:"name"`
+	IssuerId string `json:"id,omitempty"`
+	Name     string `json:"name,omitempty"`
 }
 
 type CardHolder struct {
-	Name           string          `json:"name"`
-	Identification *Identification `json:"identification"`
+	Name           string          `json:"name,omitempty"`
+	Identification *Identification `json:"identification,omitempty"`
 }
 
 type CardNumber struct {
-	Length     int    `json:"length"`
-	Validation string `json:"validation"`
+	Length     int    `json:"length,omitempty"`
+	Validation string `json:"validation,omitempty"`
 }

@@ -8,8 +8,8 @@ type Identification struct {
 	Name      string `json:"name,omitempty"`
 	Number    string `json:"number,omitempty"`
 	Subtype   string `json:"subtype,omitempty"`
-	MinLength int    `json:"min_length"`
-	MaxLength int    `json:"max_length"`
+	MinLength int    `json:"min_length,omitempty"`
+	MaxLength int    `json:"max_length,omitempty"`
 }
 
 // Returns information about identification types.
