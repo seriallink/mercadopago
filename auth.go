@@ -6,7 +6,6 @@ type Client struct {
 	ClientId     string
 	ClientSecret string
 	PublicKey    string
-	Sandbox      bool
 	AuthToken    AuthToken
 }
 
@@ -20,13 +19,12 @@ type AuthToken struct {
 	Scope        string `json:"scope"`
 }
 
-func NewClient(id, secret, key, token string, sandbox bool) *Client {
+func NewClient(id, secret, key, token string) *Client {
 
 	return &Client{
 		ClientId:     id,
 		ClientSecret: secret,
 		PublicKey:    key,
-		Sandbox:      sandbox,
 		AuthToken: AuthToken{
 			AccessToken: token,
 		},

@@ -81,13 +81,8 @@ func (c *Client) execute(method string, path string, params interface{}, headers
 	em := &ErrorMessage{}
 
 	// check for error message
-	if err = json.Unmarshal(data, em); err == nil {
-		if em.GetMessage() != "" {
-			if em.HasCauses() {
-				return errors.New(em.Causes[0].Description)
-			}
-			return errors.New(em.GetMessage())
-		}
+	if err = json.Unmarshal(data, em); err == nil && em.GetMessage() != "" {
+		return em
 	}
 
 	// parse data

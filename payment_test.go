@@ -1,6 +1,7 @@
 package mp
 
 import (
+	"github.com/davecgh/go-spew/spew"
 	"testing"
 	"time"
 
@@ -33,6 +34,7 @@ func TestCreateTicketPayment(t *testing.T) {
 	}
 
 	err := client.CreatePayment(payment)
+	spew.Dump(err, payment)
 	assert.NoError(t, err)
 	assert.NotZero(t, payment.Id)
 
