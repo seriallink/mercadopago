@@ -203,6 +203,7 @@ type Item struct {
 	PictureUrl  string  `json:"picture_url,omitempty"`
 	CategoryId  string  `json:"category_id,omitempty"`
 	Quantity    int64   `json:"quantity,omitempty"`
+	CurrencyId  string  `json:"currency_id,omitempty"`
 	UnitPrice   float64 `json:"unit_price,omitempty"`
 }
 
