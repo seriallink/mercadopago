@@ -138,6 +138,9 @@ type Payer struct {
 	Identification *Identification `json:"identification"`
 	Address        *Address        `json:"address,omitempty"`
 	Phone          *Phone          `json:"phone,omitempty"`
+	Name           string          `json:"name,omitempty"`
+	Surname        string          `json:"surname,omitempty"`
+	DataCreated    *Iso8601        `json:"data_created,omitempty"`
 }
 
 type Address struct {
