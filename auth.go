@@ -1,5 +1,7 @@
 package mp
 
+import "net/http"
+
 const oauthTokenPath = "/oauth/token"
 
 type Client struct {
@@ -7,6 +9,7 @@ type Client struct {
 	ClientSecret string
 	PublicKey    string
 	AuthToken    AuthToken
+	httpClient   *http.Client
 }
 
 type AuthToken struct {
@@ -28,6 +31,7 @@ func NewClient(id, secret, key, token string) *Client {
 		AuthToken: AuthToken{
 			AccessToken: token,
 		},
+		httpClient: http.DefaultClient,
 	}
 
 }
