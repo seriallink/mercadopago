@@ -65,7 +65,7 @@ func (c *Client) execute(method string, path string, params interface{}, headers
 		}
 	}
 
-	response, err := http.DefaultClient.Do(request)
+	response, err := c.httpClient.Do(request)
 	if err != nil {
 		return err
 	}
@@ -108,4 +108,8 @@ func (c *Client) Put(path string, params interface{}, headers Headers, model int
 // Execute DELETE requests
 func (c *Client) Delete(path string, params interface{}, headers Headers, model interface{}) error {
 	return c.execute("DELETE", path, params, headers, model)
+}
+
+func (c *Client) SetHttpClient(httpClient *http.Client) {
+	c.httpClient = httpClient
 }
