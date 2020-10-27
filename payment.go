@@ -3,6 +3,7 @@ package mp
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/jmoiron/sqlx/types"
 )
 
@@ -111,7 +112,7 @@ type Payment struct {
 	FeeDetails                []Fee               `json:"fee_details,omitempty"`
 	DifferentialPricingId     int64               `json:"differential_pricing_id,omitempty"`
 	ApplicationFee            float64             `json:"application_fee,omitempty"`
-	Status                    json.Number         `json:"status,omitempty"`
+	Status                    string              `json:"status,omitempty"`
 	StatusDetail              string              `json:"status_detail,omitempty"`
 	Capture                   bool                `json:"capture,omitempty"`
 	CallForAuthorizeId        string              `json:"call_for_authorize_id,omitempty"`
