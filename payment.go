@@ -127,6 +127,23 @@ type Payment struct {
 	CallbackUrl               string              `json:"callback_url,omitempty"`
 	Refunds                   []Refund            `json:"refunds,omitempty"`
 	AdditionalInfo            *AdditionalInfo     `json:"additional_info"`
+	PointOfInteraction        *PointOfInteraction `json:"point_of_interaction,omitempty"`
+}
+
+type ApplicationData struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
+type TransactionData struct {
+	QrCodeBase64 string `json:"qr_code_base64"`
+	QrCode       string `json:"qr_code"`
+}
+
+type PointOfInteraction struct {
+	Type            string           `json:"type"`
+	ApplicationData *ApplicationData `json:"application_data"`
+	TransactionData *TransactionData `json:"transaction_data"`
 }
 
 type Payer struct {
